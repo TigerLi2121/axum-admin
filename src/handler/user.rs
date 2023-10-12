@@ -7,7 +7,7 @@ use tracing::info;
 pub async fn login(Json(login): Json<Login>) -> R<Value> {
     info!("{:?}", login);
     // R::ok()
-    R::err("登录失败".to_string())
+    R::err_msg("登录失败".to_string())
 }
 
 #[derive(Deserialize, Serialize, Debug)]

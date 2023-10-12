@@ -24,7 +24,10 @@ where
     pub fn ok_data(data: T) -> Self {
         Self::new(0, "ok".to_string(), Some(data))
     }
-    pub fn err(msg: String) -> Self {
+    pub fn err() -> Self {
+        Self::new(500, "server error".to_string(), None)
+    }
+    pub fn err_msg(msg: String) -> Self {
         Self::new(500, msg, None)
     }
 }

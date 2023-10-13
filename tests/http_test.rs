@@ -23,3 +23,13 @@ async fn get() -> Result<(), Box<dyn std::error::Error>> {
     // println!("{:#?}", resp);
     Ok(())
 }
+
+#[tokio::test]
+async fn get_json() -> Result<(), Box<dyn std::error::Error>> {
+    let resp = reqwest::get("https://httpbin.org/ip")
+        .await?
+        .json::<HashMap<String, String>>()
+        .await?;
+    println!("{:#?}", resp);
+    Ok(())
+}

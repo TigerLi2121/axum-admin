@@ -1,5 +1,3 @@
-use std::{env, net::SocketAddr};
-
 use axum::{
     middleware,
     routing::{get, post},
@@ -38,23 +36,16 @@ async fn main() {
                 .with_line_number(true)
                 .compact(),
         )
-        // .with_writer(non_blocking_appender)
+        .with_writer(non_blocking_appender)
         .init();
 
-    let app = Router::new()
+    let router = Router::new()
         .route("/", get(|| async { "Hello World!" }))
         .route("/login", post(handler::user::login))
         .layer(middleware::from_fn(mid::api_log::print_request_response))
         .layer(CorsLayer::new().allow_methods(Any).allow_origin(Any));
-
-    let port = env::var("WEB.PORT")
-        .unwrap_or("8888".to_string())
-        .parse::<u16>()
-        .unwrap();
-    let addr = SocketAddr::from(([127, 0, 0, 1], port));
-    info!("listening on {}", addr);
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let addr = "0.0.0.0:3000";
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    info!("app addr {}", addr);
+    axum::serve(listener, router).await.unwrap();
 }

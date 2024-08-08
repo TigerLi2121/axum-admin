@@ -6,7 +6,7 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct R<T: Serialize> {
-    pub code: u16,
+    pub code: i32,
     pub msg: String,
     pub data: Option<T>,
 }
@@ -15,7 +15,7 @@ impl<T> R<T>
 where
     T: Serialize,
 {
-    pub fn new(code: u16, msg: String, data: Option<T>) -> Self {
+    pub fn new(code: i32, msg: String, data: Option<T>) -> Self {
         Self { code, msg, data }
     }
     pub fn ok() -> Self {

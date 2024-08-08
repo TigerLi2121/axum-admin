@@ -12,6 +12,7 @@ codegen-units = 1 # 调整并行代码生成单元数量，默认16个
 
 [dependencies]
 axum = "0.7.5"
+axum-valid = "0.19.0"
 dotenv = "0.15.0"
 reqwest = { version = "0.12.5", features = ["json"] }
 serde = { version = "1.0.205", features = ["derive"] }
@@ -25,3 +26,6 @@ tracing-subscriber = { version = "0.3.18", features = [
     "local-time",
     "env-filter",
 ] }
+validator = { version = "0.18.1", features = ["derive"] }
+async-trait = "0.1.81"
+thiserror = "1.0.63"

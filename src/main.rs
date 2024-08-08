@@ -9,6 +9,7 @@ use tracing::info;
 use tracing_appender::{non_blocking, rolling};
 use tracing_subscriber::{self, fmt, fmt::time::OffsetTime};
 
+mod common;
 mod handler;
 mod mid;
 mod models;

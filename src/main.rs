@@ -1,7 +1,9 @@
+use axum::http::StatusCode;
 use axum::{
+    error_handling::HandleErrorLayer,
     middleware,
     routing::{get, post},
-    Router,
+    BoxError, Router,
 };
 use time::macros::{format_description, offset};
 use tower_http::cors::{Any, CorsLayer};
@@ -37,16 +39,30 @@ async fn main() {
                 .with_line_number(true)
                 .compact(),
         )
-        .with_writer(non_blocking_appender)
+        // .with_writer(non_blocking_appender)
         .init();
 
     let router = Router::new()
         .route("/", get(|| async { "Hello World!" }))
         .route("/login", post(handler::user::login))
+        // .layer(HandleErrorLayer::new(handle_error))
         .layer(middleware::from_fn(mid::api_log::print_request_response))
         .layer(CorsLayer::new().allow_methods(Any).allow_origin(Any));
-    let addr = "0.0.0.0:3000";
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
-    info!("app addr {}", addr);
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    info!("listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, router).await.unwrap();
+}
+
+async fn handle_error(error: BoxError) -> (StatusCode, String) {
+    eprintln!("Error: {}", error);
+
+    let message = if error.is::<reqwest::Error>() {
+        "External service error".to_string()
+    } else if error.is::<serde_json::Error>() {
+        "JSON parsing error".to_string()
+    } else {
+        "An unexpected error occurred".to_string()
+    };
+
+    (StatusCode::INTERNAL_SERVER_ERROR, message)
 }

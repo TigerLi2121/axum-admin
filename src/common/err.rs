@@ -12,45 +12,28 @@ use thiserror::Error;
 use tracing::info;
 use validator::Validate;
 
-#[derive(Debug, Clone, Copy, Default)]
-pub struct Valid<T>(pub T);
+// Make our own error that wraps `anyhow::Error`.
+pub struct AppError(anyhow::Error);
 
-#[async_trait]
-impl<T, S> FromRequest<S> for Valid<T>
-where
-    T: DeserializeOwned + Validate,
-    S: Send + Sync,
-    Form<T>: FromRequest<S, Rejection = FormRejection>,
-{
-    type Rejection = ServerError;
-
-    async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
-        let Form(value) = Form::<T>::from_request(req, state).await?;
-        value.validate()?;
-        Ok(Valid(value))
+// Tell axum how to convert `AppError` into a response.
+impl IntoResponse for AppError {
+    fn into_response(self) -> Response {
+        info!("{}", self.0);
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Something went wrong: {}", self.0),
+        )
+            .into_response()
     }
 }
 
-#[derive(Debug, Error)]
-pub enum ServerError {
-    #[error(transparent)]
-    ValidationError(#[from] validator::ValidationErrors),
-
-    #[error(transparent)]
-    AxumFormRejection(#[from] FormRejection),
-    // #[error(transparent)]
-    // AxumJsonRejection(#[from] JsonRejection),
-}
-
-impl IntoResponse for ServerError {
-    fn into_response(self) -> Response {
-        match self {
-            ServerError::ValidationError(_) => {
-                let message = format!("Input validation error: [{self}]").replace('\n', ", ");
-                (StatusCode::BAD_REQUEST, message)
-            }
-            ServerError::AxumFormRejection(_) => (StatusCode::BAD_REQUEST, self.to_string()),
-        }
-        .into_response()
+// This enables using `?` on functions that return `Result<_, anyhow::Error>` to turn them into
+// `Result<_, AppError>`. That way you don't need to do that manually.
+impl<E> From<E> for AppError
+where
+    E: Into<anyhow::Error>,
+{
+    fn from(err: E) -> Self {
+        Self(err.into())
     }
 }

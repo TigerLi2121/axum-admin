@@ -5,7 +5,7 @@ use axum::{
     middleware::Next,
     response::{IntoResponse, Response},
 };
-use std::time::Instant;
+use tokio::time::Instant;
 use tracing::info;
 
 pub async fn print_request_response(

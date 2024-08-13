@@ -1,10 +1,12 @@
 use std::{collections::HashMap, time::Duration};
 
 use reqwest::Client;
+use sqlx::types::chrono::Local;
 
 #[test]
 fn out() {
-    println!("{}", 123)
+    let dt = Local::now();
+    println!("{}", dt.naive_local())
 }
 
 #[tokio::test]

@@ -1,43 +1,50 @@
 use crate::common::req::Page;
-use crate::models::db;
+use crate::common::res::RP;
 use crate::models::db::get_pool;
-use serde::Serialize;
+use serde::{Serialize, Serializer};
+use sqlx::types::chrono::{Local, NaiveDateTime};
 use sqlx::{Error, FromRow, MySql, QueryBuilder};
 use tracing::info;
 
-pub async fn page(page: Page) -> Result<(), Error> {
-    let mut tis: Vec<User> = sqlx::query_as("SELECT * FROM user")
-        .bind(page.offset.to_string())
+pub async fn page(page: Page) -> Result<RP<Vec<User>>, Error> {
+    let ms: Vec<User> = sqlx::query_as("SELECT * FROM user ORDER BY id DESC LIMIT ? OFFSET ?")
         .bind(page.limit.to_string())
-        .execute(get_pool().unwrap())
+        .bind(page.offset().to_string())
+        .fetch_all(get_pool().unwrap())
         .await?;
-    Ok(())
+    Ok(RP::ok(0, ms))
 }
 
 pub async fn sou(user: User) -> Result<(), Error> {
+    let now = Local::now().naive_local();
     if user.id.is_none() {
-        sqlx::query::<MySql>(
-            "INSERT INTO user (username,password,email,mobile,status) VALUES ( $1,$2,$3,$4,$5 )",
+        let row = sqlx::query::<MySql>(
+            "INSERT INTO user (username,password,email,mobile,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?)",
         )
-        .bind(user.username)
-        .bind(user.password)
-        .bind(user.email)
-        .bind(user.mobile)
-        .bind(user.status)
-        .execute(get_pool().unwrap())
-        .await?;
+            .bind(user.username)
+            .bind(user.password)
+            .bind(user.email)
+            .bind(user.mobile)
+            .bind(user.status)
+            .bind(now)
+            .bind(now)
+            .execute(get_pool().unwrap())
+            .await?;
+        info!("{} rows inserted", row.rows_affected());
     } else {
-        sqlx::query::<MySql>(
-            "UPDATE user SET username=$2,password=$3,email=$4,mobile=$5,status=$6 WHERE id=$1",
+        let row = sqlx::query::<MySql>(
+            "UPDATE user SET username=?,password=?,email=?,mobile=?,status=?,updated_at=? WHERE id=?",
         )
-        .bind(user.id)
-        .bind(user.username)
-        .bind(user.password)
-        .bind(user.email)
-        .bind(user.mobile)
-        .bind(user.status)
-        .execute(get_pool().unwrap())
-        .await?;
+            .bind(user.username)
+            .bind(user.password)
+            .bind(user.email)
+            .bind(user.mobile)
+            .bind(user.status)
+            .bind(now)
+            .bind(user.id)
+            .execute(get_pool().unwrap())
+            .await?;
+        info!("{} rows updated", row.rows_affected());
     }
     Ok(())
 }
@@ -56,12 +63,12 @@ pub async fn del(ids: Vec<i32>) -> Result<(), Error> {
 
 #[derive(Debug, FromRow, Serialize)]
 pub struct User {
-    id: Option<u64>,
-    username: Option<String>,
-    password: Option<String>,
-    email: Option<String>,
-    mobile: Option<String>,
-    status: Option<i32>,
-    created_at: Option<String>,
-    updated_at: Option<String>,
+    pub id: Option<u64>,
+    pub username: Option<String>,
+    pub password: Option<String>,
+    pub email: Option<String>,
+    pub mobile: Option<String>,
+    pub status: Option<i32>,
+    pub created_at: Option<NaiveDateTime>,
+    pub updated_at: Option<NaiveDateTime>,
 }

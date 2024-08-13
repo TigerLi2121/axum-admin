@@ -1,12 +1,6 @@
-GET http://localhost:3000/login?username=&password=123
-
 
 ###
-POST http://localhost:3000/login
-Content-Type: application/x-www-form-urlencoded
-
-usename = abc &
-password = 123
+GET http://localhost:3000/user?page=3
 
 
 ###
@@ -14,7 +8,7 @@ POST  http://localhost:3000/login
 Content-Type: application/json
 
 {
-  "username": "",
+  "username": "123",
   "password": "admin"
 }
 

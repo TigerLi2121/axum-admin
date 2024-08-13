@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Page {
-    offset: usize,
+    pub offset: usize,
 
-    limit: usize,
+    pub limit: usize,
 }

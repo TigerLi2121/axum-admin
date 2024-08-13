@@ -1,6 +1,6 @@
 
 ###
-GET http://localhost:3000/user?page=3
+GET http://localhost:3000/user?offset=1&limit=1
 
 
 ###

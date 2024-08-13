@@ -13,7 +13,6 @@ mod common;
 mod handler;
 mod mid;
 mod models;
-mod utils;
 
 #[tokio::main]
 async fn main() {

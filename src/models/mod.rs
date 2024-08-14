@@ -1,5 +1,5 @@
 mod db;
-mod user;
+pub mod user;
 
 #[cfg(test)]
 mod user_test {

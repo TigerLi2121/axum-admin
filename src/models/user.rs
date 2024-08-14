@@ -57,7 +57,7 @@ pub async fn sou(user: User) -> Result<u64, Error> {
     Ok(row.last_insert_id())
 }
 
-pub async fn del(ids: Vec<i32>) -> Result<(), Error> {
+pub async fn del(ids: Vec<u64>) -> Result<(), Error> {
     let mut sql: QueryBuilder<MySql> = QueryBuilder::new("DELETE FROM user WHERE id IN (");
     let mut ps = sql.separated(", ");
     for id in ids.iter() {

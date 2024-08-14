@@ -1,24 +1,32 @@
+use crate::common::data_format;
 use crate::common::req::Page;
 use crate::common::res::RP;
 use crate::models::db::get_pool;
 use serde::{Serialize, Serializer};
-use sqlx::types::chrono::{Local, NaiveDateTime};
-use sqlx::{Error, FromRow, MySql, QueryBuilder};
+use sqlx::types::chrono::{DateTime, Local, NaiveDateTime, Utc};
+use sqlx::{Error, FromRow, MySql, QueryBuilder, Row};
 use tracing::info;
 
 pub async fn page(page: Page) -> Result<RP<Vec<User>>, Error> {
-    let ms: Vec<User> = sqlx::query_as("SELECT * FROM user ORDER BY id DESC LIMIT ? OFFSET ?")
-        .bind(page.limit.to_string())
-        .bind(page.offset().to_string())
-        .fetch_all(get_pool().unwrap())
+    let count: (i32,) = sqlx::query_as("SELECT count(1) FROM user")
+        .fetch_one(get_pool().unwrap())
         .await?;
-    Ok(RP::ok(0, ms))
+    let mut ms: Vec<User> = vec![];
+    if count.0 > 0 {
+        ms = sqlx::query_as("SELECT * FROM user ORDER BY id DESC LIMIT ? OFFSET ?")
+            .bind(page.limit.to_string())
+            .bind(page.offset().to_string())
+            .fetch_all(get_pool().unwrap())
+            .await?;
+    }
+    Ok(RP::ok(count.0, ms))
 }
 
-pub async fn sou(user: User) -> Result<(), Error> {
+pub async fn sou(user: User) -> Result<u64, Error> {
     let now = Local::now().naive_local();
+    let row;
     if user.id.is_none() {
-        let row = sqlx::query::<MySql>(
+        row = sqlx::query::<MySql>(
             "INSERT INTO user (username,password,email,mobile,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?)",
         )
             .bind(user.username)
@@ -32,7 +40,7 @@ pub async fn sou(user: User) -> Result<(), Error> {
             .await?;
         info!("{} rows inserted", row.rows_affected());
     } else {
-        let row = sqlx::query::<MySql>(
+        row = sqlx::query::<MySql>(
             "UPDATE user SET username=?,password=?,email=?,mobile=?,status=?,updated_at=? WHERE id=?",
         )
             .bind(user.username)
@@ -46,7 +54,7 @@ pub async fn sou(user: User) -> Result<(), Error> {
             .await?;
         info!("{} rows updated", row.rows_affected());
     }
-    Ok(())
+    Ok(row.last_insert_id())
 }
 
 pub async fn del(ids: Vec<i32>) -> Result<(), Error> {
@@ -69,6 +77,8 @@ pub struct User {
     pub email: Option<String>,
     pub mobile: Option<String>,
     pub status: Option<i32>,
+    #[serde(with = "data_format")]
     pub created_at: Option<NaiveDateTime>,
+    #[serde(with = "data_format")]
     pub updated_at: Option<NaiveDateTime>,
 }

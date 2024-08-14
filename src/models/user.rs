@@ -1,8 +1,8 @@
-use crate::common::data_format;
+use crate::common::date_format;
 use crate::common::req::Page;
 use crate::common::res::RP;
 use crate::models::db::get_pool;
-use serde::{Serialize, Serializer};
+use serde::{Deserialize, Serialize, Serializer};
 use sqlx::types::chrono::{DateTime, Local, NaiveDateTime, Utc};
 use sqlx::{Error, FromRow, MySql, QueryBuilder, Row};
 use tracing::info;
@@ -69,7 +69,7 @@ pub async fn del(ids: Vec<u64>) -> Result<(), Error> {
     Ok(())
 }
 
-#[derive(Debug, FromRow, Serialize)]
+#[derive(Debug, FromRow, Serialize, Deserialize)]
 pub struct User {
     pub id: Option<u64>,
     pub username: Option<String>,
@@ -77,8 +77,8 @@ pub struct User {
     pub email: Option<String>,
     pub mobile: Option<String>,
     pub status: Option<i32>,
-    #[serde(with = "data_format")]
+    #[serde(with = "date_format")]
     pub created_at: Option<NaiveDateTime>,
-    #[serde(with = "data_format")]
+    #[serde(with = "date_format")]
     pub updated_at: Option<NaiveDateTime>,
 }

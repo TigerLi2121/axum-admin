@@ -45,7 +45,7 @@ async fn main() {
     let router = Router::new()
         .route("/", get(|| async { "Hello World!" }))
         .route("/login", post(handler::user::login))
-        .route("/user", get(handler::user::page))
+        .nest("/user", handler::user::router())
         .layer(middleware::from_fn(mid::api_log::log))
         .layer(CorsLayer::new().allow_methods(Any).allow_origin(Any));
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();

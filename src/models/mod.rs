@@ -1,4 +1,4 @@
-mod db;
+pub mod db;
 pub mod user;
 
 #[cfg(test)]
@@ -7,7 +7,7 @@ mod user_test {
     use crate::models::db::{get_pool, init_db_pool};
     use crate::models::user::User;
     use sqlx::types::chrono::Local;
-    use sqlx::{MySql, QueryBuilder};
+    use sqlx::{Error, MySql, QueryBuilder};
 
     #[sqlx::test]
     async fn save() -> anyhow::Result<()> {
@@ -78,6 +78,23 @@ mod user_test {
             .await?;
         println!("{}", row.0);
         Ok(())
+    }
+
+    #[sqlx::test]
+    async fn query_one() {
+        init_db_pool().await.unwrap();
+        let user: Result<User, Error> = sqlx::query_as("SELECT * FROM user WHERE username = ?")
+            .bind("22")
+            .fetch_one(get_pool().unwrap())
+            .await;
+        match user {
+            Ok(u) => {
+                println!("{:?}", u)
+            }
+            Err(e) => {
+                println!("{:?}", e);
+            }
+        }
     }
 
     #[sqlx::test]

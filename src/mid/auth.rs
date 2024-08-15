@@ -1,7 +1,7 @@
 use crate::common::db::get_pool;
 use crate::common::jwt;
 use crate::common::res::R;
-use crate::modules::sys::user::model::User;
+use crate::module::sys::user::model::User;
 use axum::extract::Request;
 use axum::http::{header, StatusCode};
 use axum::middleware::Next;

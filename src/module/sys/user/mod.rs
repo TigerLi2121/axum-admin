@@ -5,7 +5,7 @@ pub mod router;
 mod user_test {
     use crate::common::db::{get_pool, init_db_pool};
     use crate::common::req::Page;
-    use crate::modules::sys::user::model::User;
+    use crate::module::sys::user::model::User;
     use sqlx::types::chrono::Local;
     use sqlx::{Error, MySql, QueryBuilder};
 

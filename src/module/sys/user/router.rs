@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sqlx::Error;
 use std::fmt::Debug;
+use crate::date_su;
 
 pub fn router() -> Router {
     Router::new().route("/", get(page).post(sou).delete(del))
@@ -40,11 +41,7 @@ pub async fn page(page: Query<Page>) -> RP<Vec<User>> {
 }
 
 pub async fn sou(mut user: Json<User>) -> R<Value> {
-    let now = Some(Local::now().naive_local());
-    user.updated_at = now;
-    if user.id.is_none() {
-        user.created_at = now;
-    }
+    date_su!(&mut user);
     if user.password.is_some() && !user.password.clone().unwrap().is_empty() {
         user.password = Some(format!(
             "{:x}",

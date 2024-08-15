@@ -1,7 +1,7 @@
 use crate::common::date_format;
+use crate::common::db::get_pool;
 use crate::common::req::Page;
 use crate::common::res::RP;
-use crate::models::db::get_pool;
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::{Local, NaiveDateTime};
 use sqlx::{Error, FromRow, MySql, QueryBuilder};

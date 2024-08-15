@@ -1,10 +1,10 @@
 use crate::mid::auth::auth;
-use crate::models::db::init_db_pool;
 use axum::{
     middleware,
     routing::{get, post},
     Router,
 };
+use common::db::init_db_pool;
 use time::macros::{format_description, offset};
 use tower_http::cors::{Any, CorsLayer};
 use tracing::info;
@@ -12,9 +12,8 @@ use tracing_appender::{non_blocking, rolling};
 use tracing_subscriber::{self, fmt, fmt::time::OffsetTime};
 
 mod common;
-mod handler;
 mod mid;
-mod models;
+mod modules;
 
 #[tokio::main]
 async fn main() {
@@ -47,10 +46,10 @@ async fn main() {
 
     let router = Router::new()
         .route("/", get(|| async { "Hello World!" }))
-        .route("/login", post(handler::user::login))
+        .route("/login", post(modules::sys::user::router::login))
         .nest(
             "/user",
-            handler::user::router().route_layer(middleware::from_fn(auth)),
+            modules::sys::user::router::router().route_layer(middleware::from_fn(auth)),
         )
         .layer(middleware::from_fn(mid::api_log::log))
         .layer(CorsLayer::new().allow_methods(Any).allow_origin(Any));

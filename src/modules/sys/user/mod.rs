@@ -1,11 +1,11 @@
-pub mod db;
-pub mod user;
+pub mod model;
+pub mod router;
 
 #[cfg(test)]
 mod user_test {
+    use crate::common::db::{get_pool, init_db_pool};
     use crate::common::req::Page;
-    use crate::models::db::{get_pool, init_db_pool};
-    use crate::models::user::User;
+    use crate::modules::sys::user::model::User;
     use sqlx::types::chrono::Local;
     use sqlx::{Error, MySql, QueryBuilder};
 
@@ -27,15 +27,15 @@ mod user_test {
         let row = sqlx::query::<MySql>(
             "INSERT INTO user (username,password,email,mobile,status,created_at,updated_at) VALUES ( ?,?,?,?,?,?,? )",
         )
-        .bind(user.username)
-        .bind(user.password)
-        .bind(user.email)
-        .bind(user.mobile)
-        .bind(user.status)
-        .bind(now)
-        .bind(now)
-        .execute(get_pool().unwrap())
-        .await?;
+            .bind(user.username)
+            .bind(user.password)
+            .bind(user.email)
+            .bind(user.mobile)
+            .bind(user.status)
+            .bind(now)
+            .bind(now)
+            .execute(get_pool().unwrap())
+            .await?;
         println!("{} rows inserted", row.rows_affected());
         Ok(())
     }

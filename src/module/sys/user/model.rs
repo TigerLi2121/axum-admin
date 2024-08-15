@@ -3,7 +3,7 @@ use crate::common::db::get_pool;
 use crate::common::req::Page;
 use crate::common::res::RP;
 use serde::{Deserialize, Serialize};
-use sqlx::types::chrono::{Local, NaiveDateTime};
+use sqlx::types::chrono::NaiveDateTime;
 use sqlx::{Error, FromRow, MySql, QueryBuilder};
 use tracing::info;
 
@@ -23,7 +23,6 @@ pub async fn page(page: Page) -> Result<RP<Vec<User>>, Error> {
 }
 
 pub async fn sou(user: User) -> Result<u64, Error> {
-    let now = Local::now().naive_local();
     let row;
     if user.id.is_none() {
         row = sqlx::query::<MySql>(
@@ -34,24 +33,24 @@ pub async fn sou(user: User) -> Result<u64, Error> {
             .bind(user.email)
             .bind(user.mobile)
             .bind(user.status)
-            .bind(now)
-            .bind(now)
+            .bind(user.created_at)
+            .bind(user.updated_at)
             .execute(get_pool().unwrap())
             .await?;
         info!("{} rows inserted", row.rows_affected());
     } else {
-        row = sqlx::query::<MySql>(
-            "UPDATE user SET username=?,password=?,email=?,mobile=?,status=?,updated_at=? WHERE id=?",
-        )
-            .bind(user.username)
-            .bind(user.password)
-            .bind(user.email)
-            .bind(user.mobile)
-            .bind(user.status)
-            .bind(now)
-            .bind(user.id)
-            .execute(get_pool().unwrap())
-            .await?;
+        let mut sql: QueryBuilder<MySql> = QueryBuilder::new("UPDATE user SET username=");
+        sql.push_bind(user.username);
+        if user.password.is_some() && !user.password.clone().unwrap().is_empty() {
+            sql.push(",password=").push_bind(user.password);
+        }
+        sql.push(",email=").push_bind(user.email);
+        sql.push(",mobile=").push_bind(user.mobile);
+        sql.push(",status=").push_bind(user.status);
+        sql.push(",updated_at=").push_bind(user.updated_at);
+        sql.push(" WHERE id=").push_bind(user.id);
+        println!("sql:{}", sql.sql());
+        row = sql.build().execute(get_pool().unwrap()).await?;
         info!("{} rows updated", row.rows_affected());
     }
     Ok(row.last_insert_id())
@@ -77,8 +76,10 @@ pub struct User {
     pub email: Option<String>,
     pub mobile: Option<String>,
     pub status: Option<i32>,
+    #[serde(skip_deserializing)]
     #[serde(with = "date_format")]
     pub created_at: Option<NaiveDateTime>,
+    #[serde(skip_deserializing)]
     #[serde(with = "date_format")]
     pub updated_at: Option<NaiveDateTime>,
 }

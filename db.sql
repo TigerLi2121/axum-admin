@@ -37,7 +37,7 @@ CREATE TABLE `menu` (
 	`name`      VARCHAR(50)  NOT NULL COMMENT '菜单名称',
 	`path`       VARCHAR(200) NOT NULL DEFAULT '' COMMENT '链接',
 	`icon`       VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '菜单图标',
-	`perms`      VARCHAR(500) NOT NULL DEFAULT '' COMMENT '授权(user:add)',
+	`perms`      VARCHAR(500) NOT NULL DEFAULT '' COMMENT '授权(sys:user:add)',
 	`type`       INT NOT NULL COMMENT '类型(1：目录,2：菜单,3：按钮)',
 	`sort`       INT NOT NULL DEFAULT '100' COMMENT '排序',
 	`status`     INT NOT NULL DEFAULT '1' COMMENT '状态(0:禁用,1:启用,2:隐藏)',
@@ -49,17 +49,17 @@ CREATE TABLE `menu` (
 INSERT INTO `menu`(`id`,`pid`,`name`,`path`,`icon`,`perms`,`type`) VALUES
 (1, 0, '系统管理', '/sys', 'table', '', 1),
 (2, 1, '菜单管理', '/sys/menu', '', '', 2),
-(3, 2, '新增', '', '', 'menu:add', 3),
-(4, 2, '修改', '', '', 'menu:update', 3),
-(5, 2, '删除', '', '', 'menu:delete', 3),
+(3, 2, '新增', '', '', 'sys:menu:add', 3),
+(4, 2, '修改', '', '', 'sys:menu:update', 3),
+(5, 2, '删除', '', '', 'sys:menu:delete', 3),
 (6, 1, '用户管理', '/sys/user', '', '', 2),
-(7, 6, '新增', '', '', 'user:add', 3),
-(8, 6, '修改', '', '', 'user:update', 3),
-(9, 6, '删除', '', '', 'user:delete', 3),
+(7, 6, '新增', '', '', 'sys:user:add', 3),
+(8, 6, '修改', '', '', 'sys:user:update', 3),
+(9, 6, '删除', '', '', 'sys:user:delete', 3),
 (10, 1, '角色管理', '/sys/role', '', '', 2),
-(11, 10, '新增', '', '', 'role:add', 3),
-(12, 10, '修改', '', '', 'role:update', 3),
-(13, 10, '删除', '', '', 'role:delete', 3);
+(11, 10, '新增', '', '', 'sys:role:add', 3),
+(12, 10, '修改', '', '', 'sys:role:update', 3),
+(13, 10, '删除', '', '', 'sys:role:delete', 3);
 
 
 DROP TABLE IF EXISTS `role`;

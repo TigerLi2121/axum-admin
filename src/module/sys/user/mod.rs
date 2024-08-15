@@ -43,29 +43,31 @@ mod user_test {
     #[sqlx::test]
     async fn update() -> anyhow::Result<()> {
         init_db_pool().await?;
+        let now = Option::from(Local::now().naive_local());
         let user = User {
-            id: Option::from(5),
-            username: Option::from(String::from("bbb3")),
-            password: Option::from(String::from("bbb")),
-            email: Option::from(String::from("bbb")),
-            mobile: Option::from(String::from("bbb")),
+            id: Option::from(1),
+            username: Option::from(String::from("admin")),
+            password: Option::from(String::from("21232f297a57a5a743894a0e4a801fc3")),
+            // password: Option::from("".to_string()),
+            email: Option::from(String::from("a1")),
+            mobile: Option::from(String::from("a1")),
             status: Option::from(1),
             created_at: None,
-            updated_at: None,
+            updated_at: now,
         };
 
-        let row = sqlx::query::<MySql>(
-            "UPDATE user SET username=?,password=?,email=?,mobile=?,status=?,updated_at=? WHERE id=?",
-        )
-            .bind(user.username)
-            .bind(user.password)
-            .bind(user.email)
-            .bind(user.mobile)
-            .bind(user.status)
-            .bind(user.updated_at)
-            .bind(user.id)
-            .execute(get_pool().unwrap())
-            .await?;
+        let mut sql: QueryBuilder<MySql> = QueryBuilder::new("UPDATE user SET username=");
+        sql.push_bind(user.username);
+        if user.password.is_some() && !user.password.clone().unwrap().is_empty() {
+            sql.push(",password=").push_bind(user.password);
+        }
+        sql.push(",email=").push_bind(user.email);
+        sql.push(",mobile=").push_bind(user.mobile);
+        sql.push(",status=").push_bind(user.status);
+        sql.push(",updated_at=").push_bind(user.updated_at);
+        sql.push(" WHERE id=").push_bind(user.id);
+        println!("sql {}", sql.sql());
+        let row = sql.build().execute(get_pool().unwrap()).await?;
         println!("{} rows updated", row.rows_affected());
         Ok(())
     }
@@ -84,7 +86,7 @@ mod user_test {
     async fn query_one() {
         init_db_pool().await.unwrap();
         let user: Result<User, Error> = sqlx::query_as("SELECT * FROM user WHERE username = ?")
-            .bind("22")
+            .bind("admin")
             .fetch_one(get_pool().unwrap())
             .await;
         match user {

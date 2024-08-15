@@ -1,7 +1,20 @@
 
 ###
+POST  http://localhost:3000/user
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzIzNzE1MjI4LCJleHAiOjE3MjM3MjI0Mjh9.KCWoZh7sy1ZyIcMPTvXUvETnkzJSRqTBXKPkwE9d_Bs
+
+{
+  "username": "guest",
+  "password": "guest",
+  "email": "d",
+  "mobile": "b",
+  "status": 1
+}
+
+###
 GET http://localhost:3000/user?page=1&limit=10
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzIzNzAzMjAwLCJleHAiOjE3MjM3MTA0MDB9.ZDo7Z-xiea37uJ4iJwlXHqg6mSdrDPMJqAcAOV_AjWE
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzIzNzE1MjI4LCJleHAiOjE3MjM3MjI0Mjh9.KCWoZh7sy1ZyIcMPTvXUvETnkzJSRqTBXKPkwE9d_Bs
 
 ###
 POST  http://localhost:3000/login

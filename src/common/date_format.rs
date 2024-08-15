@@ -1,4 +1,4 @@
-use serde::{self, Deserialize, Deserializer, Serializer};
+use serde::Serializer;
 use sqlx::types::chrono::NaiveDateTime;
 
 const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
@@ -25,11 +25,15 @@ where
 //        D: Deserializer<'de>
 //
 // although it may also be generic over the output types T.
-pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    let dt = NaiveDateTime::parse_from_str(&s, FORMAT).map_err(serde::de::Error::custom)?;
-    Ok(Some(dt))
-}
+// pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
+// where
+//     D: Deserializer<'de>,
+// {
+//     let s = String::deserialize(deserializer);
+//     if s.is_err() {
+//         return Ok(None);
+//     }
+//     let dt =
+//         NaiveDateTime::parse_from_str(&s.unwrap(), FORMAT).map_err(serde::de::Error::custom)?;
+//     Ok(Some(dt))
+// }

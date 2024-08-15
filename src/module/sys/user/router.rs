@@ -7,6 +7,7 @@ use crate::module::sys::user::model::User;
 use axum::extract::Query;
 use axum::routing::get;
 use axum::{Json, Router};
+use chrono::Local;
 use md5::{Digest, Md5};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -38,7 +39,18 @@ pub async fn page(page: Query<Page>) -> RP<Vec<User>> {
     model::page(page.0).await.unwrap()
 }
 
-pub async fn sou(user: Json<User>) -> R<Value> {
+pub async fn sou(mut user: Json<User>) -> R<Value> {
+    let now = Some(Local::now().naive_local());
+    user.updated_at = now;
+    if user.id.is_none() {
+        user.created_at = now;
+    }
+    if user.password.is_some() && user.password.clone().unwrap().is_empty() {
+        user.password = Some(format!(
+            "{:x}",
+            Md5::digest(user.password.clone().unwrap().as_bytes())
+        ));
+    }
     model::sou(user.0).await.unwrap();
     R::ok()
 }

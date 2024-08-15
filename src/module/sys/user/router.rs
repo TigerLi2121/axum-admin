@@ -45,7 +45,7 @@ pub async fn sou(mut user: Json<User>) -> R<Value> {
     if user.id.is_none() {
         user.created_at = now;
     }
-    if user.password.is_some() && user.password.clone().unwrap().is_empty() {
+    if user.password.is_some() && !user.password.clone().unwrap().is_empty() {
         user.password = Some(format!(
             "{:x}",
             Md5::digest(user.password.clone().unwrap().as_bytes())

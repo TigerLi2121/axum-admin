@@ -7,7 +7,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0I
 {
   "username": "guest",
   "password": "guest",
-  "email": "d",
+  "email": "aa",
   "mobile": "b",
   "status": 1
 }

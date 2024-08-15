@@ -1,3 +1,5 @@
+use crate::mid::auth::auth;
+use crate::models::db::init_db_pool;
 use axum::{
     middleware,
     routing::{get, post},
@@ -17,6 +19,7 @@ mod models;
 #[tokio::main]
 async fn main() {
     dotenv::dotenv().ok();
+    init_db_pool().await.expect("connection db error");
 
     // 输出到文件中
     let file_appender = rolling::never("logs", "app.log");
@@ -45,7 +48,10 @@ async fn main() {
     let router = Router::new()
         .route("/", get(|| async { "Hello World!" }))
         .route("/login", post(handler::user::login))
-        .nest("/user", handler::user::router())
+        .nest(
+            "/user",
+            handler::user::router().route_layer(middleware::from_fn(auth)),
+        )
         .layer(middleware::from_fn(mid::api_log::log))
         .layer(CorsLayer::new().allow_methods(Any).allow_origin(Any));
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();

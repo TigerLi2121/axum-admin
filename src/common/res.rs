@@ -12,10 +12,14 @@ pub struct RP<T: Serialize> {
     pub data: T,
 }
 
-impl<T: Serialize> RP<T>
-{
+impl<T: Serialize> RP<T> {
     pub fn new(code: i32, msg: String, count: i32, data: T) -> Self {
-        Self { code, msg, count, data }
+        Self {
+            code,
+            msg,
+            count,
+            data,
+        }
     }
     pub fn ok(count: i32, data: T) -> Self {
         Self::new(0, "ok".to_string(), count, data)
@@ -30,7 +34,6 @@ where
         Json(self).into_response()
     }
 }
-
 
 #[derive(Serialize)]
 pub struct R<T: Serialize> {
@@ -57,6 +60,9 @@ where
     }
     pub fn err_msg(msg: String) -> Self {
         Self::new(500, msg, None)
+    }
+    pub fn code(code: i32, msg: String) -> Self {
+        Self::new(code, msg, None)
     }
 }
 

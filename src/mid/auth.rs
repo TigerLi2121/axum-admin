@@ -5,7 +5,8 @@ use crate::models::user::User;
 use axum::extract::Request;
 use axum::http::{header, StatusCode};
 use axum::middleware::Next;
-use axum::response::{IntoResponse, Response};
+use axum::response::IntoResponse;
+use serde_json::Value;
 use sqlx::Error;
 
 pub async fn auth(mut req: Request, next: Next) -> Result<impl IntoResponse, (StatusCode, String)> {
@@ -21,7 +22,7 @@ pub async fn auth(mut req: Request, next: Next) -> Result<impl IntoResponse, (St
             }
         });
     if token.is_none() {
-        return Ok(R::new(886, String::from("login user"), None));
+        return Ok(R::<Value>::code(886, String::from("login user")).into_response());
     }
     let uid = jwt::get_uid(token.unwrap());
 
@@ -29,13 +30,9 @@ pub async fn auth(mut req: Request, next: Next) -> Result<impl IntoResponse, (St
         .bind(uid)
         .fetch_one(get_pool().unwrap())
         .await;
-    match user {
-        Ok(u) => {
-            req.extensions_mut().insert(u);
-        }
-        Err(e) => {
-            return Ok(R::new(886, String::from("login user"), None));
-        }
+    if user.is_err() {
+        return Ok(R::<Value>::code(886, String::from("login user")).into_response());
     }
+    req.extensions_mut().insert(user.unwrap());
     Ok(next.run(req).await)
 }

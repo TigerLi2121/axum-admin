@@ -2,9 +2,9 @@ use crate::common::date_format;
 use crate::common::req::Page;
 use crate::common::res::RP;
 use crate::models::db::get_pool;
-use serde::{Deserialize, Serialize, Serializer};
-use sqlx::types::chrono::{DateTime, Local, NaiveDateTime, Utc};
-use sqlx::{Error, FromRow, MySql, QueryBuilder, Row};
+use serde::{Deserialize, Serialize};
+use sqlx::types::chrono::{Local, NaiveDateTime};
+use sqlx::{Error, FromRow, MySql, QueryBuilder};
 use tracing::info;
 
 pub async fn page(page: Page) -> Result<RP<Vec<User>>, Error> {
@@ -69,7 +69,7 @@ pub async fn del(ids: Vec<u64>) -> Result<(), Error> {
     Ok(())
 }
 
-#[derive(Debug, FromRow, Serialize, Deserialize)]
+#[derive(Debug, FromRow, Serialize, Deserialize, Clone)]
 pub struct User {
     pub id: Option<u64>,
     pub username: Option<String>,

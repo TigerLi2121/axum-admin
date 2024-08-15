@@ -1,2 +1,2 @@
 pub mod api_log;
-mod auth;
+pub mod auth;

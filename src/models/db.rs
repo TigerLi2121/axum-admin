@@ -1,6 +1,6 @@
 use dotenv;
 use once_cell::sync::OnceCell;
-use sqlx::{mysql::MySqlPoolOptions, Error, MySqlPool, Row};
+use sqlx::{mysql::MySqlPoolOptions, Error, MySqlPool};
 
 static MYSQL_POOL: OnceCell<MySqlPool> = OnceCell::new();
 //建立mysql连接

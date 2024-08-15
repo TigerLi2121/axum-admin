@@ -1,14 +1,5 @@
-use chrono::{Duration, Local};
 use reqwest::Client;
 use std::collections::HashMap;
-
-#[test]
-fn out() {
-    let now = Local::now();
-    println!("{} {}", now.timestamp(), now.naive_local());
-    let exp = now + Duration::hours(2);
-    println!("{} {}", exp.timestamp(), exp.naive_local());
-}
 
 #[tokio::test]
 async fn get() -> Result<(), Box<dyn std::error::Error>> {

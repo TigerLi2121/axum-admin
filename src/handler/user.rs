@@ -1,3 +1,4 @@
+use crate::common::jwt::get_token;
 use crate::common::req::Page;
 use crate::common::res::{R, RP};
 use crate::models::db::get_pool;
@@ -16,7 +17,7 @@ pub fn router() -> Router {
     Router::new().route("/", get(page).post(sou).delete(del))
 }
 
-pub async fn login(login: Json<Login>) -> R<Value> {
+pub async fn login(login: Json<Login>) -> R<String> {
     let user: Result<User, Error> = sqlx::query_as("SELECT * FROM user WHERE username = ?")
         .bind(login.username.to_string())
         .fetch_one(get_pool().unwrap())
@@ -24,11 +25,13 @@ pub async fn login(login: Json<Login>) -> R<Value> {
     if user.is_err() {
         return R::err_msg("username not exist".to_string());
     }
+    let user = user.unwrap();
     let pwd = format!("{:x}", Md5::digest(login.password.as_bytes()));
-    if login.password != pwd {
+    if user.password.unwrap() != pwd {
         return R::err_msg("password error".to_string());
     }
-    R::ok()
+    let token = get_token(user.id.unwrap());
+    R::ok_data(token)
 }
 
 pub async fn page(page: Query<Page>) -> RP<Vec<User>> {

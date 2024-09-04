@@ -1,5 +1,5 @@
 [package]
-name = "x-user"
+name = "x-admin"
 version = "0.1.0"
 edition = "2021"
 

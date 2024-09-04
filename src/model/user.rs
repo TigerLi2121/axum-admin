@@ -26,15 +26,13 @@ pub async fn sou(user: User) -> Result<u64, Error> {
     let row;
     if user.id.is_none() {
         row = sqlx::query::<MySql>(
-            "INSERT INTO user (username,password,email,mobile,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?)",
+            "INSERT INTO user (username,password,email,mobile,status) VALUES (?,?,?,?,?)",
         )
             .bind(user.username)
             .bind(user.password)
             .bind(user.email)
             .bind(user.mobile)
             .bind(user.status)
-            .bind(user.created_at)
-            .bind(user.updated_at)
             .execute(get_pool().unwrap())
             .await?;
         info!("{} rows inserted", row.rows_affected());
@@ -47,7 +45,6 @@ pub async fn sou(user: User) -> Result<u64, Error> {
         sql.push(",email=").push_bind(user.email);
         sql.push(",mobile=").push_bind(user.mobile);
         sql.push(",status=").push_bind(user.status);
-        sql.push(",updated_at=").push_bind(user.updated_at);
         sql.push(" WHERE id=").push_bind(user.id);
         println!("sql:{}", sql.sql());
         row = sql.build().execute(get_pool().unwrap()).await?;

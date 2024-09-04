@@ -2,11 +2,11 @@
 ###
 POST  http://localhost:3000/user
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzIzNzE1MjI4LCJleHAiOjE3MjM3MjI0Mjh9.KCWoZh7sy1ZyIcMPTvXUvETnkzJSRqTBXKPkwE9d_Bs
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1NDIxOTg1LCJleHAiOjE3MjU0MjkxODV9.Wn442JSkkBvXN2loEeIT_clk5GZiPaR1Sr2XLgWZjmc
 
 {
-  "username": "guest",
-  "password": "guest",
+  "username": "guest2",
+  "password": "guest2",
   "email": "aa",
   "mobile": "b",
   "status": 1
@@ -14,7 +14,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0I
 
 ###
 GET http://localhost:3000/user?page=1&limit=10
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzIzNzE1MjI4LCJleHAiOjE3MjM3MjI0Mjh9.KCWoZh7sy1ZyIcMPTvXUvETnkzJSRqTBXKPkwE9d_Bs
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1NDIxOTg1LCJleHAiOjE3MjU0MjkxODV9.Wn442JSkkBvXN2loEeIT_clk5GZiPaR1Sr2XLgWZjmc
 
 ###
 POST  http://localhost:3000/login

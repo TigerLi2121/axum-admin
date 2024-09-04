@@ -2,8 +2,8 @@ use crate::common::db::get_pool;
 use crate::common::jwt::get_token;
 use crate::common::req::Page;
 use crate::common::res::{R, RP};
-use crate::module::sys::user::model;
-use crate::module::sys::user::model::User;
+use crate::model::user;
+use crate::model::user::User;
 use axum::extract::Query;
 use axum::routing::get;
 use axum::{Json, Router};
@@ -36,7 +36,7 @@ pub async fn login(login: Json<Login>) -> R<String> {
 }
 
 pub async fn page(page: Query<Page>) -> RP<Vec<User>> {
-    model::page(page.0).await.unwrap()
+    user::page(page.0).await.unwrap()
 }
 
 pub async fn sou(mut user: Json<User>) -> R<Value> {
@@ -51,12 +51,12 @@ pub async fn sou(mut user: Json<User>) -> R<Value> {
             Md5::digest(user.password.clone().unwrap().as_bytes())
         ));
     }
-    model::sou(user.0).await.unwrap();
+    user::sou(user.0).await.unwrap();
     R::ok()
 }
 
 pub async fn del(ids: Json<Vec<u64>>) -> R<Value> {
-    model::del(ids.0).await.unwrap();
+    user::del(ids.0).await.unwrap();
     R::ok()
 }
 

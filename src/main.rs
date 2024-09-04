@@ -13,7 +13,8 @@ use tracing_subscriber::{self, fmt, fmt::time::OffsetTime};
 
 mod common;
 mod mid;
-mod module;
+mod model;
+mod route;
 
 #[tokio::main]
 async fn main() {
@@ -46,10 +47,10 @@ async fn main() {
 
     let router = Router::new()
         .route("/", get(|| async { "Hello World!" }))
-        .route("/login", post(module::sys::user::router::login))
+        .route("/login", post(route::user::login))
         .nest(
             "/user",
-            module::sys::user::router::router().route_layer(middleware::from_fn(auth)),
+            route::user::router().route_layer(middleware::from_fn(auth)),
         )
         .layer(middleware::from_fn(mid::api_log::log))
         .layer(CorsLayer::new().allow_methods(Any).allow_origin(Any));

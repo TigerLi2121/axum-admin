@@ -1,8 +1,37 @@
+###
+POST  http://localhost:3000/menu
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
+
+{
+  "app_id": 1,
+  "name": "菜单"
+}
+
+###
+GET http://localhost:3000/menu?app_id=1&page=1&limit=10
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
+
+
+###
+POST  http://localhost:3000/role
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
+
+{
+  "app_id": 1,
+  "name": "商务"
+}
+
+###
+GET http://localhost:3000/role?app_id=1&page=1&limit=10
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
+
 
 ###
 POST  http://localhost:3000/user
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1NDIxOTg1LCJleHAiOjE3MjU0MjkxODV9.Wn442JSkkBvXN2loEeIT_clk5GZiPaR1Sr2XLgWZjmc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
 
 {
   "username": "guest2",
@@ -13,20 +42,16 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0I
 }
 
 ###
-GET http://localhost:3000/user?page=1&limit=10
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1NDIxOTg1LCJleHAiOjE3MjU0MjkxODV9.Wn442JSkkBvXN2loEeIT_clk5GZiPaR1Sr2XLgWZjmc
+GET http://localhost:3000/user?app_id=1&page=1&limit=10
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
 
 ###
 POST  http://localhost:3000/login
 Content-Type: application/json
 
 {
+  "app_id": 1,
   "username": "admin",
   "password": "admin"
 }
 
-###
-GET http://localhost:3000/aa?a=b
-
-###
-GET http://localhost:3000/?a=b

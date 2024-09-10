@@ -1,9 +1,8 @@
-use crate::common::db::get_pool;
 use crate::common::jwt::get_token;
 use crate::common::req::Page;
 use crate::common::res::{R, RP};
 use crate::model::user;
-use crate::model::user::User;
+use crate::model::user::{get_user, User};
 use axum::extract::Query;
 use axum::routing::get;
 use axum::{Json, Router};
@@ -18,10 +17,7 @@ pub fn router() -> Router {
 }
 
 pub async fn login(login: Json<Login>) -> R<String> {
-    let user: Result<User, Error> = sqlx::query_as("SELECT * FROM user WHERE username = ?")
-        .bind(login.username.to_string())
-        .fetch_one(get_pool().unwrap())
-        .await;
+    let user: Result<User, Error> = get_user(login.app_id, login.username.to_string()).await;
     if user.is_err() {
         return R::err_msg("username not exist".to_string());
     }
@@ -56,6 +52,7 @@ pub async fn del(ids: Json<Vec<u64>>) -> R<Value> {
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Login {
+    app_id: u64,
     username: String,
     password: String,
 }

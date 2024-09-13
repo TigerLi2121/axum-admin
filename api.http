@@ -8,9 +8,9 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0I
   "name": "菜单"
 }
 
-###
+### 菜单列表
 GET http://localhost:3000/menu?app_id=1&page=1&limit=10
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI2MjE5OTgzLCJleHAiOjE3MjYyMjcxODN9.4HOMMpFx5PaUi9rvAENATpsE4wHhLrjL2PZxY3tOaE8
 
 
 ###
@@ -45,7 +45,12 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0I
 GET http://localhost:3000/user?app_id=1&page=1&limit=10
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI1OTU4ODM0LCJleHAiOjE3MjU5NjYwMzR9.Bcvux9H5eRYX_Jk73gcF9tRWxOCcbRwLPhwUvpcmYNQ
 
-###
+### 当前用户信息
+GET http://localhost:3000/user/current
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzI2MjE5OTgzLCJleHAiOjE3MjYyMjcxODN9.4HOMMpFx5PaUi9rvAENATpsE4wHhLrjL2PZxY3tOaE8
+
+
+### 登录
 POST  http://localhost:3000/login
 Content-Type: application/json
 

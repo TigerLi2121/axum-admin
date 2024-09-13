@@ -62,19 +62,19 @@ CREATE TABLE `menu` (
 	PRIMARY KEY ( `id` ) 
 ) COMMENT = '菜单';
 
-INSERT INTO `menu`(`id`,`pid`,`app_id`,`name`,`path`,`icon`,`perms`,`type`) VALUES
-(1, 0, 1, '菜单管理', '/menu', '', '', 2),
-(2, 1, 1, '新增', '', '', 'menu:add', 3),
-(3, 1, 1, '修改', '', '', 'menu:update', 3),
-(4, 1, 1, '删除', '', '', 'menu:delete', 3),
-(5, 0, 1, '用户管理', '/user', '', '', 2),
-(6, 5, 1, '新增', '', '', 'user:add', 3),
-(7, 5, 1, '修改', '', '', 'user:update', 3),
-(8, 5, 1, '删除', '', '', 'user:delete', 3),
-(9, 0, 1, '角色管理', '/role', '', '', 2),
-(10, 9, 1, '新增', '', '', 'role:add', 3),
-(11, 9, 1, '修改', '', '', 'role:update', 3),
-(12, 9, 1, '删除', '', '', 'role:delete', 3);
+INSERT INTO `menu`(`id`,`pid`,`app_id`,`name`,`path`,`component`,`icon`,`perms`,`type`) VALUES
+(1, 0, 1, '菜单管理', '/menu', '/menu', '', '', 2),
+(2, 1, 1, '新增', '', '', '', 'menu:add', 3),
+(3, 1, 1, '修改', '', '', '', 'menu:update', 3),
+(4, 1, 1, '删除', '', '', '', 'menu:delete', 3),
+(5, 0, 1, '用户管理', '/user', '/user', '', '', 2),
+(6, 5, 1, '新增', '', '', '', 'user:add', 3),
+(7, 5, 1, '修改', '', '', '', 'user:update', 3),
+(8, 5, 1, '删除', '', '', '', 'user:delete', 3),
+(9, 0, 1, '角色管理', '/role', '/role', '', '', 2),
+(10, 9, 1, '新增', '', '', '', 'role:add', 3),
+(11, 9, 1, '修改', '', '', '', 'role:update', 3),
+(12, 9, 1, '删除', '', '', '', 'role:delete', 3);
 
 
 DROP TABLE IF EXISTS `role`;

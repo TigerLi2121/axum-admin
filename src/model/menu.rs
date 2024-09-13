@@ -6,6 +6,14 @@ use sqlx::types::chrono::NaiveDateTime;
 use sqlx::{Error, FromRow, MySql, QueryBuilder};
 use tracing::info;
 
+pub async fn list_user_id(user_id: u64) -> Result<Vec<Menu>, Error> {
+    let ms: Vec<Menu> = sqlx::query_as("SELECT m.* FROM menu m LEFT JOIN role_menu rm ON m.id = rm.menu_id LEFT JOIN user_role ur ON ur.role_id = rm.role_id WHERE m.status != 0 AND ur.user_id = ? ORDER BY m.sort DESC")
+        .bind(user_id)
+        .fetch_all(get_pool().unwrap())
+        .await?;
+    Ok(ms)
+}
+
 pub async fn list(app_id: u64) -> Result<Vec<Menu>, Error> {
     let ms: Vec<Menu> = sqlx::query_as("SELECT * FROM menu WHERE app_id = ? ORDER BY sort DESC")
         .bind(app_id)
